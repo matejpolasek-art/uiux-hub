@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI/UX Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --border: #EBEBEB;
+    --text: #111111;
+    --muted: #999999;
+    --accent: #D4561A;
+    --accent-light: #FEF3ED;
+  }
+
+  body {
+    font-family: 'Geist', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* HEADER */
+  header {
+    padding: 56px 60px 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: #FFFFFF;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+  }
+
+  .logo-block h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .logo-block h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .logo-block p {
+    margin-top: 8px;
+    font-size: 0.875rem;
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .header-meta span {
+    display: block;
+    font-size: 1.5rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  /* FILTER TABS */
+  .filters {
+    padding: 28px 60px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 8px;
+    font-weight: 500;
+  }
+
+  .filter-btn {
+    padding: 7px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    background: transparent;
+    font-family: 'Geist', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: var(--text);
+    border-color: var(--text);
+    color: white;
+  }
+
+  /* CONTENT */
+  main {
+    padding: 0 60px;
+  }
+
+  .section {
+    margin-bottom: 56px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .section-count {
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  .section-tag {
+    margin-left: auto;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* CARDS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.22s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.055);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .card:hover {
+    border-color: #DCDCDC;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+    transform: translateY(-3px);
+  }
+
+  .card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .card-arrow {
+    font-size: 1rem;
+    color: var(--border);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .card:hover .card-arrow {
+    color: var(--accent);
+    transform: translate(3px, -3px);
+  }
+
+  .card-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: auto;
+  }
+
+  /* ADD CARD */
+  .card-add {
+    border-style: dashed;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 140px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 400;
+    gap: 6px;
+    border-color: #D0CBC4;
+  }
+
+  .card-add:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-light);
+    transform: translateY(-2px);
+  }
+
+  .card-add .plus {
+    font-size: 1.5rem;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  /* SEARCH */
+  .search-wrap {
+    padding: 28px 60px 4px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 420px;
+    padding: 12px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    background: #FFFFFF;
+    font-family: 'Geist', sans-serif;
+    font-size: 0.875rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--accent); }
+
+  /* HIDDEN */
+  .section[data-hidden="true"] { display: none; }
+
+  @media (max-width: 700px) {
+    header, .filters, main, .search-wrap { padding-left: 20px; padding-right: 20px; }
+    header { padding-top: 32px; flex-direction: column; gap: 16px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <h1>UI/UX <em>Hub</em></h1>
+    <p>Tvůj osobní rozcestník pro design inspiraci</p>
+  </div>
+  <div class="header-meta">
+    <span id="total-count">0</span>
+    odkazů celkem
+  </div>
+</header>
+
+<div class="search-wrap">
+  <input type="text" class="search-input" placeholder="🔍  Hledat zdroj..." id="searchInput" oninput="handleSearch(this.value)">
+</div>
+
+<div class="filters">
+  <span class="filter-label">Filtr</span>
+  <button class="filter-btn active" data-filter="all" onclick="filterCategory('all', this)">Vše</button>
+  <button class="filter-btn" data-filter="inspo" onclick="filterCategory('inspo', this)">Inspo</button>
+  <button class="filter-btn" data-filter="tools" onclick="filterCategory('tools', this)">Tools</button>
+  <button class="filter-btn" data-filter="resources" onclick="filterCategory('resources', this)">Resources</button>
+  <button class="filter-btn" data-filter="components" onclick="filterCategory('components', this)">Components</button>
+</div>
+
+<main id="main-content">
+
+  <!-- INSPO -->
+  <section class="section" data-category="inspo">
+    <div class="section-header">
+      <h2 class="section-title">Inspiration</h2>
+      <span class="section-count" id="count-inspo">0</span>
+      <span class="section-tag">Galerie · Showcasy</span>
+    </div>
+    <div class="cards" id="grid-inspo">
+      <a class="card" href="https://www.awwwards.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🏆</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Awwwards</div>
+        <div class="card-desc">Oceněné weby od nejlepších designérů a vývojářů na světě.</div>
+        <span class="card-tag">Web design</span>
+      </a>
+      <a class="card" href="https://godly.website" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">✨</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Godly</div>
+        <div class="card-desc">Kurátorovaná kolekce nejlepšího webového designu z celého internetu.</div>
+        <span class="card-tag">Curated</span>
+      </a>
+      <a class="card" href="https://land-book.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">📖</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Land-book</div>
+        <div class="card-desc">Inspirativní galerie landing pages pro produkty a startupy.</div>
+        <span class="card-tag">Landing pages</span>
+      </a>
+      <a class="card" href="https://www.behance.net" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🎨</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Behance</div>
+        <div class="card-desc">Portfolio platforma od Adobe. Miliony projektů z celého světa.</div>
+        <span class="card-tag">Portfolio</span>
+      </a>
+      <a class="card" href="https://refero.design" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🗂️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Refero</div>
+        <div class="card-desc">Real-world UI screenshoty z top produktů pro referenci při designu.</div>
+        <span class="card-tag">UI Reference</span>
+      </a>
+      <a class="card" href="https://dribbble.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🏀</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Dribbble</div>
+        <div class="card-desc">Komunita designérů sdílející shot-based ukázky UI a vizuálního designu.</div>
+        <span class="card-tag">Community</span>
+      </a>
+      <a class="card" href="https://www.siteinspire.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">💡</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Siteinspire</div>
+        <div class="card-desc">Ručně kurátorovaná sbírka nejlepšího webdesignu. Elegantní a čisté.</div>
+        <span class="card-tag">Web design</span>
+      </a>
+      <a class="card" href="https://supahero.io" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🦸</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Supahero</div>
+        <div class="card-desc">Inspirativní kolekce hero sekcí z reálných webů. Rychlá reference pro above-the-fold design.</div>
+        <span class="card-tag">Hero sections</span>
+      </a>
+      <a class="card" href="https://logobook.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🔷</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Logobook</div>
+        <div class="card-desc">Archiv světových log od ikonických značek. Skvělý zdroj pro brand inspiraci.</div>
+        <span class="card-tag">Branding</span>
+      </a>
+      <a class="card" href="https://designeverywhere.co" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🌍</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Design Everywhere</div>
+        <div class="card-desc">Kurátorovaný design ze všech koutů světa — digitální i fyzický.</div>
+        <span class="card-tag">Curated</span>
+      </a>
+      <a class="card" href="https://savee.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🔖</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Savee</div>
+        <div class="card-desc">Vizuální moodboard komunita. Sbírej a sdílej design inspiraci na jednom místě.</div>
+        <span class="card-tag">Moodboard</span>
+      </a>
+      <div class="card card-add" onclick="addLink('inspo')">
+        <span class="plus">+</span>
+        Přidat odkaz
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="section" data-category="tools">
+    <div class="section-header">
+      <h2 class="section-title">Tools</h2>
+      <span class="section-count" id="count-tools">0</span>
+      <span class="section-tag">Nástroje · Workflow</span>
+    </div>
+    <div class="cards" id="grid-tools">
+      <a class="card" href="https://mobbin.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">📱</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Mobbin</div>
+        <div class="card-desc">Největší knihovna mobile & web UI screenshotů z reálných appek.</div>
+        <span class="card-tag">Mobile UI</span>
+      </a>
+      <a class="card" href="https://www.figma.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🖊️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Figma</div>
+        <div class="card-desc">Kolaborativní design nástroj. Prototypy, komponenty, dev mode.</div>
+        <span class="card-tag">Design tool</span>
+      </a>
+      <a class="card" href="https://coolors.co" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🎨</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Coolors</div>
+        <div class="card-desc">Generátor barevných palet. Rychlé a intuitivní tvoření harmonie barev.</div>
+        <span class="card-tag">Colors</span>
+      </a>
+      <a class="card" href="https://fontpair.co" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🔤</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Fontpair</div>
+        <div class="card-desc">Pomáhá párovat Google Fonts dohromady pro lepší typografii.</div>
+        <span class="card-tag">Typography</span>
+      </a>
+      <a class="card" href="https://www.uxtools.co/tools/design-systems" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🛠️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">UX Tools</div>
+        <div class="card-desc">Přehled a srovnání nástrojů pro design systémy. Pomůže vybrat ten správný stack.</div>
+        <span class="card-tag">Design systems</span>
+      </a>
+      <div class="card card-add" onclick="addLink('tools')">
+        <span class="plus">+</span>
+        Přidat odkaz
+      </div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section" data-category="resources">
+    <div class="section-header">
+      <h2 class="section-title">Resources</h2>
+      <span class="section-count" id="count-resources">0</span>
+      <span class="section-tag">Ikony · Fonty · Obrázky</span>
+    </div>
+    <div class="cards" id="grid-resources">
+      <a class="card" href="https://lucide.dev" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">◼</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Lucide Icons</div>
+        <div class="card-desc">Krásná, konzistentní open-source ikonová sada. SVG, React, Vue.</div>
+        <span class="card-tag">Icons</span>
+      </a>
+      <a class="card" href="https://unsplash.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">📷</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Unsplash</div>
+        <div class="card-desc">Volně použitelné fotografie vysoké kvality pro jakýkoliv projekt.</div>
+        <span class="card-tag">Photos</span>
+      </a>
+      <a class="card" href="https://fonts.google.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">G</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Google Fonts</div>
+        <div class="card-desc">Tisíce volných fontů. Rychlé načítání, snadná integrace do webů.</div>
+        <span class="card-tag">Fonts</span>
+      </a>
+      <a class="card" href="https://haikei.app" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🌊</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Haikei</div>
+        <div class="card-desc">Generátor SVG backgrounds — vlny, bloby, gradienty pro weby.</div>
+        <span class="card-tag">Backgrounds</span>
+      </a>
+      <a class="card" href="https://www.ogimage.gallery" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🖼️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">OG Image Gallery</div>
+        <div class="card-desc">Galerie Open Graph obrázků z top produktů. Inspirace pro link preview design.</div>
+        <span class="card-tag">OG Images</span>
+      </a>
+      <a class="card" href="https://baymard.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">📊</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Baymard Institute</div>
+        <div class="card-desc">Výzkumný institut pro UX e-commerce. Hloubkové studie a best practices.</div>
+        <span class="card-tag">UX Research</span>
+      </a>
+      <a class="card" href="https://www.smashingmagazine.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">💥</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Smashing Magazine</div>
+        <div class="card-desc">Prémiové články o webdesignu, UX a front-endu od odborníků z praxe.</div>
+        <span class="card-tag">Articles</span>
+      </a>
+      <a class="card" href="https://www.nngroup.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🔬</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Nielsen Norman Group</div>
+        <div class="card-desc">Autoritativní zdroj UX výzkumu a guidelines. Biblická reference pro UX designéry.</div>
+        <span class="card-tag">UX Research</span>
+      </a>
+      <a class="card" href="https://www.brandguidelines.net" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">📐</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Brand Guidelines</div>
+        <div class="card-desc">Sbírka brand guidelines od světových značek. Učte se od nejlepších.</div>
+        <span class="card-tag">Branding</span>
+      </a>
+      <a class="card" href="https://www.fontshare.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">✍️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Fontshare</div>
+        <div class="card-desc">Prémiové fonty zdarma od Indian Type Foundry. Kvalitní alternativa ke Google Fonts.</div>
+        <span class="card-tag">Fonts</span>
+      </a>
+      <div class="card card-add" onclick="addLink('resources')">
+        <span class="plus">+</span>
+        Přidat odkaz
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section class="section" data-category="components">
+    <div class="section-header">
+      <h2 class="section-title">Components</h2>
+      <span class="section-count" id="count-components">0</span>
+      <span class="section-tag">UI Kity · Design systémy</span>
+    </div>
+    <div class="cards" id="grid-components">
+      <a class="card" href="https://ui.shadcn.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🧩</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">shadcn/ui</div>
+        <div class="card-desc">Krásné React komponenty. Copy-paste do projektu, plně customizable.</div>
+        <span class="card-tag">React</span>
+      </a>
+      <a class="card" href="https://www.radix-ui.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">⚙️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Radix UI</div>
+        <div class="card-desc">Primitivní, přístupné React komponenty bez stylu. Základní kámen moderního UI.</div>
+        <span class="card-tag">Primitives</span>
+      </a>
+      <a class="card" href="https://www.magicui.design" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🪄</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Magic UI</div>
+        <div class="card-desc">Animované React komponenty s Framer Motion. Vizuálně wow efekty.</div>
+        <span class="card-tag">Animated</span>
+      </a>
+      <a class="card" href="https://tailwindui.com" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">💨</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Tailwind UI</div>
+        <div class="card-desc">Prémiové komponenty a šablony od tvůrců Tailwind CSS.</div>
+        <span class="card-tag">Tailwind</span>
+      </a>
+      <a class="card" href="https://www.404s.design" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">🚫</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">404s.design</div>
+        <div class="card-desc">Kurátorovaná galerie kreativních 404 stránek. Inspirace jak udělat error page nezapomenutelnou.</div>
+        <span class="card-tag">404 pages</span>
+      </a>
+      <a class="card" href="https://www.footer.design" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">⬇️</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Footer.design</div>
+        <div class="card-desc">Galerie footer designů z reálných webů. Jak správně zakončit stránku.</div>
+        <span class="card-tag">Footers</span>
+      </a>
+      <a class="card" href="https://www.navbar.gallery" target="_blank">
+        <div class="card-top">
+          <div class="card-icon">☰</div>
+          <span class="card-arrow">↗</span>
+        </div>
+        <div class="card-name">Navbar Gallery</div>
+        <div class="card-desc">Kolekce navigačních lišt z top produktů. Reference pro různé styly navbaru.</div>
+        <span class="card-tag">Navigation</span>
+      </a>
+      <div class="card card-add" onclick="addLink('components')">
+        <span class="plus">+</span>
+        Přidat odkaz
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ADD LINK MODAL -->
+<div id="modal" style="display:none; position:fixed; inset:0; background:rgba(26,23,20,0.4); z-index:100; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px); opacity:0; transition:opacity 0.2s;">
+  <div style="background:white; border-radius:20px; padding:36px; width:100%; max-width:440px; box-shadow:0 24px 64px rgba(26,23,20,0.15);">
+    <h3 style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:600; margin-bottom:24px;">Přidat odkaz</h3>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <input id="inp-name" placeholder="Název webu" style="padding:12px 16px; border:1.5px solid #EBEBEB; border-radius:10px; font-family:'Geist',sans-serif; font-size:0.875rem; outline:none;">
+      <input id="inp-url" placeholder="https://..." style="padding:12px 16px; border:1.5px solid #EBEBEB; border-radius:10px; font-family:'Geist',sans-serif; font-size:0.875rem; outline:none;">
+      <input id="inp-desc" placeholder="Krátký popis..." style="padding:12px 16px; border:1.5px solid #EBEBEB; border-radius:10px; font-family:'Geist',sans-serif; font-size:0.875rem; outline:none;">
+      <input id="inp-tag" placeholder="Tag (např. Inspiration)" style="padding:12px 16px; border:1.5px solid #EBEBEB; border-radius:10px; font-family:'Geist',sans-serif; font-size:0.875rem; outline:none;">
+    </div>
+    <div style="display:flex; gap:10px; margin-top:24px;">
+      <button onclick="saveLink()" style="flex:1; padding:12px; background:#111111; color:white; border:none; border-radius:10px; font-family:'Geist',sans-serif; font-size:0.875rem; font-weight:500; cursor:pointer;">Přidat</button>
+      <button onclick="closeModal()" style="padding:12px 20px; border:1.5px solid #EBEBEB; border-radius:10px; background:transparent; font-family:'Geist',sans-serif; font-size:0.875rem; cursor:pointer; color:#999999;">Zrušit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentCategory = null;
+
+  function countCards() {
+    const cats = ['inspo','tools','resources','components'];
+    let total = 0;
+    cats.forEach(cat => {
+      const grid = document.getElementById('grid-' + cat);
+      const count = grid.querySelectorAll('.card:not(.card-add)').length;
+      document.getElementById('count-' + cat).textContent = count;
+      total += count;
+    });
+    document.getElementById('total-count').textContent = total;
+  }
+
+  function filterCategory(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s => {
+      s.dataset.hidden = (cat !== 'all' && s.dataset.category !== cat);
+    });
+  }
+
+  function handleSearch(val) {
+    const q = val.toLowerCase();
+    document.querySelectorAll('.card:not(.card-add)').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = text.includes(q) ? '' : 'none';
+    });
+  }
+
+  function addLink(cat) {
+    currentCategory = cat;
+    const modal = document.getElementById('modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.style.opacity = '1', 10);
+    ['name','url','desc','tag'].forEach(f => document.getElementById('inp-' + f).value = '');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('modal');
+    modal.style.opacity = '0';
+    setTimeout(() => modal.style.display = 'none', 200);
+  }
+
+  function saveLink() {
+    const name = document.getElementById('inp-name').value.trim();
+    const url = document.getElementById('inp-url').value.trim();
+    const desc = document.getElementById('inp-desc').value.trim();
+    const tag = document.getElementById('inp-tag').value.trim();
+    if (!name || !url) return;
+
+    const grid = document.getElementById('grid-' + currentCategory);
+    const addBtn = grid.querySelector('.card-add');
+    const icons = ['🌐','⭐','🔗','💫','🚀','🎯'];
+    const icon = icons[Math.floor(Math.random() * icons.length)];
+
+    const card = document.createElement('a');
+    card.className = 'card';
+    card.href = url;
+    card.target = '_blank';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-icon">${icon}</div>
+        <span class="card-arrow">↗</span>
+      </div>
+      <div class="card-name">${name}</div>
+      <div class="card-desc">${desc || 'Žádný popis.'}</div>
+      <span class="card-tag">${tag || 'Link'}</span>
+    `;
+    grid.insertBefore(card, addBtn);
+    closeModal();
+    countCards();
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  countCards();
+</script>
+</body>
+</html>
